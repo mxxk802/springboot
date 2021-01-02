@@ -20,7 +20,6 @@ public class HelloController {
 
         Map<String,Object> msg=new ConcurrentReferenceHashMap<>();
         msg.put("msg","这是一个简单的例子");
-        System.out.println("增加新的更改");
         return msg;
     }
 }
