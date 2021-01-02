@@ -1,0 +1,36 @@
+package com.mxxk.lightdream;
+
+import com.mxxk.LightDreamApplication;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+/**
+ * MyTest
+ *
+ * @auther zhang
+ * @date 2020/7/2
+ **/
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest(classes = LightDreamApplication.class)
+public class MyTest {
+
+    @Autowired
+    private Myconfig myconfig;
+
+    @Autowired
+    private Myconfig1 myconfig1;
+
+    @Test
+    public void show(){
+        myconfig.show();
+    }
+
+    @Test
+    public void show1(){
+        System.out.println(myconfig1.getPort());
+    }
+
+}

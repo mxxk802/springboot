@@ -1,0 +1,66 @@
+/**
+ * 通过Class类对象，来获取Constructor类对象
+ *
+ */
+public class GetConstructorObject {
+	public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+			InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		// 首先获取Class类对象
+		Class cls = Class.forName("sueyun.cn.reflact.Person");
+
+		/*
+		 * Constructor[] getConstructors(); 获取当前类内的所有非私有化构造方法
+		 */
+		Constructor[] allCons = cls.getConstructors();
+		for (Constructor constructor : allCons) {
+			System.out.println(constructor);
+		}
+
+		/*
+		 * 暴力反射 Constructor[] getDeclaredConstructors(); 获取当前类内的所有构造方法，包括私有化构造方法
+		 */
+		Constructor[] allC = cls.getDeclaredConstructors();
+		for (Constructor constructor : allC) {
+			System.out.println(constructor);
+		}
+
+		/*
+		 * Constructor getConstructor(Class... parameterTypes);
+		 * 根据参数类型，获取指定参数类型的构造方法，只能获取非私有化的构造方法 Class类型 ...
+		 * 不定长参数，要求参数的类型都是Class类型，但是参数的个数不受限制 要求参数的顺序，类型和个数必须一一对应，否则
+		 * NoSuchMethodException
+		 */
+		Constructor nullParamCon = cls.getConstructor(null);
+		Constructor tParamCon = cls.getConstructor(Integer.class, String.class, int.class);
+		// cls.getConstructor(Integer.class, String.class);
+		System.out.println(nullParamCon);
+		System.out.println(tParamCon);
+
+		/*
+		 * 暴力反射 Constructor getDeclaredConstructor(Class... parameterTypes);
+		 * 根据参数类型，获取指定参数类型的构造方法，可以获取私有化的构造方法 Class类型 ...
+		 * 不定长参数，要求参数的类型都是Class类型，但是参数的个数不受限制
+		 */
+		Constructor privateCon = cls.getDeclaredConstructor(Integer.class, String.class);
+		System.out.println(privateCon);
+
+		/*
+		 * Object newInstance(Object... initargs);
+		 * 通过Constructor类对象，调用newInstance方法，创建类对象 Object... 不定长参数，用于传入构造方法所需的参数
+		 */
+		Person p1 = (Person) nullParamCon.newInstance(null);
+		p1.setId(1);
+		p1.setName("张三");
+		System.out.println(p1);
+
+		Person p2 = (Person) tParamCon.newInstance(1, "他很帅", 10);
+		System.out.println(p2);
+
+		/*
+		 * setAccessible(boolean) 给予私有化构造方法，成员方法，成员变量操作权限
+		 */
+		privateCon.setAccessible(true);
+		Person p3 = (Person) privateCon.newInstance(2, "演示");
+		System.out.println(p3);
+	}
+}

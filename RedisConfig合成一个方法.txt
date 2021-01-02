@@ -1,0 +1,50 @@
+package com.mxxk.lightdream.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+import redis.clients.jedis.JedisPoolConfig;
+
+import java.io.Serializable;
+
+import static redis.clients.jedis.HostAndPort.localhost;
+
+
+/**
+ * RedisConfig
+ * @auther zhang
+ * @date 2020/6/1
+ **/
+@Configuration
+public class RedisConfig {
+
+    @Bean
+    public RedisTemplate<String,Object> redisTemplate(){
+
+        /**创建jedis连接池**/
+        JedisPoolConfig config=new JedisPoolConfig();
+        config.setMaxTotal(20);
+        config.setMaxIdle(10);
+        config.setMinIdle(5);
+
+        //配置redis的连接信息
+        JedisConnectionFactory factory=new JedisConnectionFactory();
+        factory.setPoolConfig(config);
+        factory.setHostName("localhost");
+        factory.setPort(6379);
+
+        /**通过redistemplete执行curd**/
+        RedisTemplate<String,Object> template=new RedisTemplate<>();
+        template.setConnectionFactory(factory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
+        return template;
+    }
+
+}
+
