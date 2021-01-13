@@ -17,5 +17,4 @@ for  %%i in (*.jar) do ( call :runwith %%i )
 
 :runwith
 java -Xmx521m -jar  %1
-pause
-eof
+pause>nul & goto :eof
