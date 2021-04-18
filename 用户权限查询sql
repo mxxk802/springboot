@@ -1,0 +1,11 @@
+SELECT r.`name` role_name,sys_p.`name` permission_name,sys_p.url,sys_p.description permissiom_description from sys_permission sys_p LEFT JOIN  role_permission role_p on sys_p.id=role_p.permission_id 
+LEFT JOIN sys_role r on role_p.role_id=r.id where r.id in (SELECT u.role_ids from sys_user u where u.id=2) 查询用户id 为2的用户所拥有的角色。
+
+
+
+#根据用户id查询该用户用户信息，权限
+SELECT u.id userId,u.emp_number,u.emp_name,r.`name` role_name,sys_p.`name` permission_name,sys_p.url,sys_p.description permissiom_description from sys_permission sys_p 
+LEFT JOIN  role_permission role_p on sys_p.id=role_p.permission_id 
+LEFT JOIN sys_role r on role_p.role_id=r.id 
+LEFT JOIN user_role u_r on r.id=u_r.role_id
+LEFT JOIN sys_user u on u.id=u_r.user_id where u.id=2;
