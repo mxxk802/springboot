@@ -1,0 +1,38 @@
+<mapper namespace="com.sqxinxibu.neikanhoutai.dao.UserDao" >
+    <!--用户-->
+    <!--<resultMap id="UserRolePermissionMap" type="UserRolePermission">-->
+        <!--<result property="userId" column="id" />-->
+        <!--<result property="name" column="name" jdbcType="VARCHAR"/>-->
+        <!--<collection property="roleList" column="id" javaType="list" select="selectAllRoles"></collection>-->
+        <!--<collection property="permissionList" column="id" javaType="list" select="selectAllpermissions"></collection>-->
+    <!--</resultMap>-->
+    <resultMap id="UserRolePermissionMap" type="UserRolePermission">
+        <result property="userId" column="id" />
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <collection property="role" column="id" javaType="com.sqxinxibu.neikanhoutai.entity.Roles" select="selectAllRoles"></collection>
+    </resultMap>
+    <!--权限-->
+    <resultMap id="PermissionMap" type="com.sqxinxibu.neikanhoutai.entity.Permission" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+    </resultMap>
+    <!--角色-->
+    <resultMap id="RolesMap" type="com.sqxinxibu.neikanhoutai.entity.Roles" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <!--权限集合-->
+        <collection property="permissionList" column="id" javaType="list" select="selectAllpermissions"></collection>
+    </resultMap>
+    <!--根据角色id查询权限(先从角色权限关联表查询角色id相等，在查询权限id，根据权限id在权限表里查询权限)-->
+    <select id="selectAllpermissions" resultType="com.sqxinxibu.neikanhoutai.entity.Permission" parameterType="java.lang.Integer">
+        select id,name from sys_menu where id in (select sys_role_menu.menu_id from sys_role_menu where sys_role_menu.role_id=#{id})
+     </select>
+    <!--根据用户中的角色查询角色-->
+    <select id="selectAllRoles" resultMap="RolesMap" parameterType="java.lang.Integer">
+        select id,name from sys_role where id in (select sys_user_role.role_id from sys_user_role where sys_user_role.user_id=#{id})
+    </select>
+    <select id="chaxunByUserId" resultMap="UserRolePermissionMap" parameterType="java.lang.Integer" >
+            select * from  user where id=#{id}
+    </select>
+
+
